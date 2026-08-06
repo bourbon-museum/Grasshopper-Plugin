@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net7.0;net48</TargetFrameworks>
+    <TargetExt>.gha</TargetExt>
+    <NoWarn>NU1701</NoWarn>
+    <UseWindowsForms Condition="$(TargetFramework.StartsWith('net7'))">true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <Title>Grasshopper-Plugin</Title>
+    <Description>Streams structured metadata from a headless WordPress (ACF Pro) REST API into Rhino/Grasshopper 3D scenes.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grasshopper" Version="8.33.26188.13001" IncludeAssets="compile;build" />
+    <PackageReference Include="RhinoCommon" Version="8.33.26188.13001" IncludeAssets="compile;build" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+</Project>
