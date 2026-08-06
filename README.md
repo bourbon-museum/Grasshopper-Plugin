@@ -38,27 +38,27 @@ The plugin acts as a bridge between the web CMS layer and the 3D visual programm
 
 ```
 
-Grasshopper-Plugin/
-├── .gitignore                    # Visual Studio / .NET gitignore template
-├── README.md                     # Project overview and architectural design
-├── Grasshopper-Plugin.sln        # Solution file
-│
-└── Grasshopper-Plugin/           # Main C# project directory
-    ├── Grasshopper-Plugin.csproj # .NET project dependencies & build targets
-    ├── PluginInfo.cs             # Grasshopper assembly registration metadata
-    │
-    ├── Models/                   # Strongly-typed data structures for JSON
-    │   ├── MuseumObject.cs       # Core WordPress Post attributes
-    │   └── AcfData.cs            # ACF custom field payload definitions
-    │
-    ├── Services/                 # External communication logic
-    │   └── WordPressRestClient.cs# Async HTTP client for endpoint querying
-    │
-    └── Components/               # Grasshopper canvas components
-        ├── FetchMuseumData.cs    # Primary node to fetch and expose REST data
-        └── BindGeometryData.cs   # Helper node to link geometry to data by ID
+### Alternative: Markdown List Format (Never Collapses)
 
-🛠️ Overview of Key Layers
+If your environment still wraps code blocks, you can replace the `📁 Repository File Structure` section with standard Markdown lists:
+
+* **`Grasshopper-Plugin/`**
+  * `.gitignore` — Visual Studio / .NET gitignore template
+  * `README.md` — Project overview and architectural design
+  * `Grasshopper-Plugin.sln` — Solution file
+  * **`Grasshopper-Plugin/`** (Main C# Project)
+    * `Grasshopper-Plugin.csproj` — .NET project dependencies & build targets
+    * `PluginInfo.cs` — Grasshopper assembly registration metadata
+    * **`Models/`** — Data transfer objects for JSON deserialization
+      * `MuseumObject.cs` — Core WordPress Post attributes
+      * `AcfData.cs` — ACF custom field payload definitions
+    * **`Services/`** — External communication logic
+      * `WordPressRestClient.cs` — Async HTTP client for endpoint querying
+    * **`Components/`** — Grasshopper canvas components
+      * `FetchMuseumData.cs` — Main node to fetch and expose REST data
+      * `BindGeometryData.cs` — Helper node to link geometry to data by ID
+
+## 🛠️ Overview of Key Layers
 Models: C# classes representing the expected JSON schema from the WordPress REST API and ACF Pro custom field groups.
 
 Services: Network handling logic responsible for asynchronously fetching JSON data from specified URLs.
