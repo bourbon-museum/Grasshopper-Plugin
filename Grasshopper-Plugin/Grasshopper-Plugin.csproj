@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
+    <RootNamespace>GrasshopperPlugin</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
