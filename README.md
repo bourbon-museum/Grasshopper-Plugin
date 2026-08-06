@@ -1,5 +1,7 @@
 # Grasshopper-Plugin
 
+<img width="2250" height="830" alt="github-grasshopper-banner" src="https://github.com/user-attachments/assets/128ca52b-57b6-40b3-ab1a-ee3eba767280" />
+
 A custom Grasshopper 3D plugin (`.gha`) written in C# that streams structured metadata from a headless WordPress (ACF Pro) REST API directly into Rhino/Grasshopper 3D scenes. 
 
 It allows spatial geometry in a 3D CAD environment to be dynamically enriched and driven by web-managed CMS data.
