@@ -47,8 +47,9 @@ namespace GrasshopperPlugin.Models
         [JsonProperty("signature")]
         public List<SignatureExpression> Signature { get; set; } = new();
 
+        /// <summary>Title of the linked wiki post, resolved server-side for SEO.</summary>
         [JsonProperty("wiki_article")]
-        public WikiArticleReference? WikiArticle { get; set; }
+        public string WikiArticle { get; set; } = string.Empty;
     }
 
     /// <summary>Sub-fields of the ACF "location" group field.</summary>
@@ -171,22 +172,5 @@ namespace GrasshopperPlugin.Models
     {
         [JsonProperty("expression_name")]
         public string ExpressionName { get; set; } = string.Empty;
-    }
-
-    /// <summary>
-    /// ACF "post_object" field value shape (return_format: object), assuming the
-    /// site's REST endpoint normalizes the referenced post the same way as the
-    /// core WP posts endpoint.
-    /// </summary>
-    public class WikiArticleReference
-    {
-        [JsonProperty("id")]
-        public int Id { get; set; }
-
-        [JsonProperty("title")]
-        public RenderedField Title { get; set; } = new();
-
-        [JsonProperty("link")]
-        public string Link { get; set; } = string.Empty;
     }
 }
