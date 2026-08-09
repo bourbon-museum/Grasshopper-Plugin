@@ -25,11 +25,8 @@ namespace GrasshopperPlugin.Services
         /// Fetches a WordPress REST collection endpoint (e.g. .../wp-json/wp/v2/distillery)
         /// and deserializes the response into a list of museum objects.
         /// </summary>
-        public async Task<List<MuseumObject>> GetMuseumObjectsAsync(string url, CancellationToken cancellationToken = default)
-        {
-            var json = await GetJsonAsync(url, cancellationToken).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<List<MuseumObject>>(json) ?? new List<MuseumObject>();
-        }
+        public Task<List<MuseumObject>> GetMuseumObjectsAsync(string url, CancellationToken cancellationToken = default)
+            => GetListAsync<MuseumObject>(url, cancellationToken);
 
         /// <summary>
         /// Fetches a single WordPress REST item endpoint (e.g. .../wp-json/wp/v2/distillery/42)
@@ -40,6 +37,22 @@ namespace GrasshopperPlugin.Services
             var json = await GetJsonAsync(url, cancellationToken).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<MuseumObject>(json)
                    ?? throw new JsonSerializationException($"Received empty or invalid JSON from '{url}'.");
+        }
+
+        /// <summary>
+        /// Fetches a WordPress REST taxonomy terms endpoint
+        /// (e.g. .../wp-json/wp/v2/categories, or a custom taxonomy's rest_base).
+        /// </summary>
+        public Task<List<TaxonomyTerm>> GetTaxonomyTermsAsync(string url, CancellationToken cancellationToken = default)
+            => GetListAsync<TaxonomyTerm>(url, cancellationToken);
+
+        /// <summary>
+        /// Fetches any WordPress REST collection endpoint and deserializes the response into a list.
+        /// </summary>
+        public async Task<List<T>> GetListAsync<T>(string url, CancellationToken cancellationToken = default)
+        {
+            var json = await GetJsonAsync(url, cancellationToken).ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<List<T>>(json) ?? new List<T>();
         }
 
         private async Task<string> GetJsonAsync(string url, CancellationToken cancellationToken)
