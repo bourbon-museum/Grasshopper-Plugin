@@ -12,7 +12,8 @@ namespace GrasshopperPlugin.Components
     /// <summary>
     /// Searches a WordPress REST API collection endpoint by title text and/or a
     /// taxonomy term, without needing to know a specific item's URL up front.
-    /// Wire the Titles output into a stock Value List to pick a single item.
+    /// Pick one result with a stock List Item component and feed its ID to
+    /// Place Collection Item.
     /// </summary>
     public class SearchMuseumItems : GH_Component
     {
@@ -31,7 +32,7 @@ namespace GrasshopperPlugin.Components
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("URL", "URL", "WordPress REST API collection endpoint to search.", GH_ParamAccess.item);
+            pManager.AddTextParameter("URL", "URL", "WordPress REST API collection endpoint to search.", GH_ParamAccess.item, CollectionPlacement.DefaultUrl);
             pManager.AddTextParameter("Search", "S", "Filter items whose title/content contains this text.", GH_ParamAccess.item, string.Empty);
             pManager.AddTextParameter("Taxonomy", "Tax", "REST base of a taxonomy to filter by (e.g. \"category\" or a custom taxonomy slug).", GH_ParamAccess.item, string.Empty);
             pManager.AddTextParameter("Term", "Term", "Taxonomy term name or slug to filter by.", GH_ParamAccess.item, string.Empty);
@@ -47,6 +48,7 @@ namespace GrasshopperPlugin.Components
             pManager.AddIntegerParameter("IDs", "ID", "WordPress post IDs matching the search.", GH_ParamAccess.list);
             pManager.AddTextParameter("Titles", "T", "Post titles matching the search.", GH_ParamAccess.list);
             pManager.AddTextParameter("ACF", "ACF", "ACF Pro field data for each matching post, as JSON.", GH_ParamAccess.list);
+            pManager.AddIntegerParameter("Numbers", "N", "Collection numbers of the matching posts.", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -97,6 +99,7 @@ namespace GrasshopperPlugin.Components
                     DA.SetDataList(0, Array.Empty<int>());
                     DA.SetDataList(1, Array.Empty<string>());
                     DA.SetDataList(2, Array.Empty<string>());
+                    DA.SetDataList(3, Array.Empty<int>());
                     return;
                 }
 
@@ -105,10 +108,10 @@ namespace GrasshopperPlugin.Components
 
             var queryUrl = queryParams.Count > 0 ? $"{url}?{string.Join("&", queryParams)}" : url;
 
-            List<MuseumObject> museumObjects;
+            List<CollectionItem> items;
             try
             {
-                museumObjects = Task.Run(() => RestClient.GetMuseumObjectsAsync(queryUrl)).GetAwaiter().GetResult();
+                items = Task.Run(() => RestClient.GetCollectionItemsAsync(queryUrl)).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -116,9 +119,15 @@ namespace GrasshopperPlugin.Components
                 return;
             }
 
-            DA.SetDataList(0, museumObjects.Select(o => o.Id));
-            DA.SetDataList(1, museumObjects.Select(o => o.Title.Rendered));
-            DA.SetDataList(2, museumObjects.Select(o => JsonConvert.SerializeObject(o.Acf)));
+            items = items
+                .OrderBy(i => i.Acf.Number ?? int.MaxValue)
+                .ThenBy(i => i.Id)
+                .ToList();
+
+            DA.SetDataList(0, items.Select(i => i.Id));
+            DA.SetDataList(1, items.Select(i => CollectionPlacement.DecodeTitle(i.Title.Rendered)));
+            DA.SetDataList(2, items.Select(i => JsonConvert.SerializeObject(i.Acf)));
+            DA.SetDataList(3, items.Select(i => i.Acf.Number ?? 0));
         }
 
         /// <summary>Resolves a taxonomy term name/slug to its numeric ID via that taxonomy's terms endpoint.</summary>

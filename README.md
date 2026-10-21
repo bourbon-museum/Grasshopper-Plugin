@@ -77,6 +77,39 @@ The system operates across four primary operational layers, ensuring low-latency
 
 ---
 
+## 🖼️ Building a Scene from the Collection
+
+The **Museum → Collection** components pull collection items (the `museum-item` post type) from WordPress and place them in Rhino. Each item becomes a vertical plane textured with its featured image, with its name as a wrapped label centred beneath it. Every placed object carries user text (`WP_ID`, `WP_Number`, `WP_Title`, `WP_Subtitle`, `WP_Location`, `WP_Proof`, `WP_Era`, `WP_Link`) on a `Collection Items` layer, so Bind Geometry Data can join it back to its record.
+
+### 1. Pick an item
+**Select Museum Item** lists the collection by name. Double-click the component to open a window with a filter box and the numbered list, then pick one. It outputs the item's `ID`, `Title` and `Number`. An optional `Search` input narrows the list on the server, and `Refresh` fetches it again.
+
+*(Search Museum Items does the same lookup as plain lists, if you would rather work with the results directly.)*
+
+### 2. Place it in the scene
+Wire the `ID` into **Place Collection Item** and set:
+
+| Input | Meaning |
+|-------|---------|
+| `Location` | Middle of the plane's bottom edge |
+| `Rotation` | Turn about the Z axis, in degrees (0 faces the Front view) |
+| `Height` | Plane height in model units. Width follows the image's aspect ratio |
+| `Place` | `true` places the item |
+| `Remove` | `true` takes the item out of the scene instead |
+| `Plane` | Optional. Places the item on an exact plane, overriding `Location` and `Rotation` |
+
+Use one Place Collection Item per item to fill the scene one at a time. Placing the same item again moves it rather than duplicating it, and if the item already sits where the inputs say, nothing changes. **Place All Collection Items** lays every item out in a single row ordered by collection number, which is handy for a quick overview.
+
+Textures need a PNG or JPG. The site serves WebP, which Rhino cannot read, so the plugin downloads the original upload next to the WebP and falls back to converting the WebP with macOS's built-in `sips`. Switch the viewport to **Rendered** to see the images.
+
+### 3. Edit or remove an item
+Each plane and its label are grouped, so clicking either selects both. Drag the item with Rhino's gumball to move, rotate or scale it. **Selected Collection Item** follows the selected item and outputs its `ID`, `Title`, `Location`, `Rotation`, `Height` and exact `Plane`. It keeps its reading when you deselect, so editing does not lose the item.
+
+* **Keep a gumball edit in Grasshopper:** wire its `Plane` and `Height` into Place Collection Item.
+* **Remove an item:** wire its `ID` into Place Collection Item and set `Remove` to `true`.
+
+---
+
 ## 📄 File Structure
 
 * **`Grasshopper-Plugin/`**
@@ -88,11 +121,19 @@ The system operates across four primary operational layers, ensuring low-latency
     * `PluginInfo.cs` — Grasshopper assembly registration metadata
     * **`Models/`** — Data transfer objects for JSON deserialization
       * `MuseumObject.cs` — Core WordPress Post attributes
-      * `AcfData.cs` — ACF custom field payload definitions
-    * **`Services/`** — External communication logic
-      * `WordPressRestClient.cs` — Async HTTP client for endpoint querying
+      * `AcfData.cs` — ACF custom field payload definitions (distillery posts)
+      * `CollectionItem.cs` — Collection item (`museum-item`) posts, their ACF fields and media records
+      * `TaxonomyTerm.cs` — Taxonomy terms used for search filtering
+    * **`Services/`** — External communication and Rhino document logic
+      * `WordPressRestClient.cs` — Async HTTP client for endpoint querying, paging and media download
+      * `CollectionPlacement.cs` — Places, replaces, groups and removes collection items in the Rhino document
     * **`Components/`** — Grasshopper canvas components
-      * `FetchMuseumData.cs` — Main node to fetch and expose REST data
+      * `FetchMuseumData.cs` — Fetches a REST endpoint and exposes IDs, titles and ACF data
+      * `SearchMuseumItems.cs` — Searches the collection by name and taxonomy term
+      * `SelectMuseumItem.cs` — Pick a collection item by name from a filterable list
+      * `PlaceCollectionItem.cs` — Places, moves or removes one collection item in the scene
+      * `PlaceCollectionItems.cs` — Places every collection item in a row
+      * `SelectedCollectionItem.cs` — Reads the item selected in Rhino and follows gumball edits
       * `BindGeometryData.cs` — Helper node to link geometry to data by ID
 
 ---
