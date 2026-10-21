@@ -1,6 +1,6 @@
 # Grasshopper-Plugin
 
-<img width="2250" height="830" alt="github-grasshopper-banner" src="https://github.com/user-attachments/assets/128ca52b-57b6-40b3-ab1a-ee3eba767280" />
+<img width="2250" alt="Grasshopper-Plugin collection workflow: picking a museum item by name in Grasshopper, with textured, labelled items placed in the Rhino viewport" src="docs/collection-workflow.png" />
 
 ---
 
