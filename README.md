@@ -81,32 +81,40 @@ The system operates across four primary operational layers, ensuring low-latency
 
 The **Museum → Collection** components pull collection items (the `museum-item` post type) from WordPress and place them in Rhino. Each item becomes a vertical plane textured with its featured image, with its name as a wrapped label centred beneath it. Every placed object carries user text (`WP_ID`, `WP_Number`, `WP_Title`, `WP_Subtitle`, `WP_Location`, `WP_Proof`, `WP_Era`, `WP_Link`) on a `Collection Items` layer, so Bind Geometry Data can join it back to its record.
 
-### 1. Pick an item
-**Select Museum Item** lists the collection by name. Double-click the component to open a window with a filter box and the numbered list, then pick one. It outputs the item's `ID`, `Title` and `Number`. An optional `Search` input narrows the list on the server, and `Refresh` fetches it again.
+### Build a fresh item
 
-*(Search Museum Items does the same lookup as plain lists, if you would rather work with the results directly.)*
+1. Add **Select Museum Item** (`PickWP`) from the Museum tab. Double-click it to open a window with a filter box and the numbered list of items, then pick one. Its name shows under the component. It outputs the item's `ID`, `Title` and `Number`. Its optional `Search` input narrows the list on the server, and `Refresh` fetches it again.
+2. Add **Place Collection Item** and wire PickWP's `ID` into its `ID` input.
+3. Set the other inputs:
 
-### 2. Place it in the scene
-Wire the `ID` into **Place Collection Item** and set:
+   | Input | Meaning |
+   |-------|---------|
+   | `Location` | A point. The middle of the plane's bottom edge |
+   | `Rotation` | Optional. Turn about the Z axis, in degrees (0 faces the Front view) |
+   | `Height` | Plane height in model units, e.g. 12. Width follows the image's aspect ratio |
+   | `Place` | `true` places the item |
+   | `Remove` | `true` takes the item out of the scene instead |
+   | `Plane` | Optional. Places the item on an exact plane, overriding `Location` and `Rotation` |
 
-| Input | Meaning |
-|-------|---------|
-| `Location` | Middle of the plane's bottom edge |
-| `Rotation` | Turn about the Z axis, in degrees (0 faces the Front view) |
-| `Height` | Plane height in model units. Width follows the image's aspect ratio |
-| `Place` | `true` places the item |
-| `Remove` | `true` takes the item out of the scene instead |
-| `Plane` | Optional. Places the item on an exact plane, overriding `Location` and `Rotation` |
+4. Wire a **Boolean Toggle** into `Place` and set it to `true`. The item appears in Rhino as a textured plane with its name beneath it. Switch the viewport to **Rendered** to see the image.
+5. For the next item, pick a different one in PickWP and give it a new `Location`. Placing a second item does not remove the first. To keep every item editable from the canvas, use one PickWP and Place Collection Item pair per item.
 
-Use one Place Collection Item per item to fill the scene one at a time. Placing the same item again moves it rather than duplicating it, and if the item already sits where the inputs say, nothing changes. **Place All Collection Items** lays every item out in a single row ordered by collection number, which is handy for a quick overview.
+Placing the same item again moves it rather than duplicating it, and if the item already sits where the inputs say, nothing changes. **Place All Collection Items** lays every item out in a single row ordered by collection number, which is handy for a quick overview. **Search Museum Items** returns plain lists of IDs, titles and numbers if you would rather work with the results directly.
 
-Textures need a PNG or JPG. The site serves WebP, which Rhino cannot read, so the plugin downloads the original upload next to the WebP and falls back to converting the WebP with macOS's built-in `sips`. Switch the viewport to **Rendered** to see the images.
+Textures need a PNG or JPG. The site serves WebP, which Rhino cannot read, so the plugin downloads the original upload next to the WebP and falls back to converting the WebP with macOS's built-in `sips`.
 
-### 3. Edit or remove an item
-Each plane and its label are grouped, so clicking either selects both. Drag the item with Rhino's gumball to move, rotate or scale it. **Selected Collection Item** follows the selected item and outputs its `ID`, `Title`, `Location`, `Rotation`, `Height` and exact `Plane`. It keeps its reading when you deselect, so editing does not lose the item.
+### Edit an item already in the scene
 
-* **Keep a gumball edit in Grasshopper:** wire its `Plane` and `Height` into Place Collection Item.
-* **Remove an item:** wire its `ID` into Place Collection Item and set `Remove` to `true`.
+**In Rhino, with no wiring.** Click the item's plane or label. They are grouped, so both are selected. Drag the gumball to move, rotate or scale it. You are editing the Rhino objects directly. Items placed before the plane and label were grouped need placing once more.
+
+**Through Grasshopper.**
+
+1. Add **Selected Collection Item** (`SelWP`). It follows whichever item you click in Rhino and keeps its reading when you deselect. It outputs `ID`, `Title`, `Location`, `Rotation`, `Height` and the exact `Plane`.
+2. Wire its `Plane` and `Height` into Place Collection Item's `Plane` and `Height`, and its `ID` into `ID`. A gumball edit then survives re-solving.
+3. To change an item by number instead, give Place Collection Item new `Location`, `Rotation` or `Height` values and set `Place` to `true`.
+4. To remove it, wire its `ID` into Place Collection Item and set `Remove` to `true`.
+
+Do not put a Move between SelWP and the placer when you also use the gumball, because the offset is applied again on each update.
 
 ---
 
