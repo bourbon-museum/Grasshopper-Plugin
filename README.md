@@ -105,16 +105,16 @@ Textures need a PNG or JPG. The site serves WebP, which Rhino cannot read, so th
 
 ### Edit an item already in the scene
 
-**In Rhino, with no wiring.** Click the item's plane or label. They are grouped, so both are selected. Drag the gumball to move, rotate or scale it. You are editing the Rhino objects directly. Items placed before the plane and label were grouped need placing once more.
+**In Rhino, with no wiring.** Click the item's plane or label. They are grouped, so both are selected. Drag the gimbal to move, rotate or scale it. You are editing the Rhino objects directly. Items placed before the plane and label were grouped need placing once more.
 
 **Through Grasshopper.**
 
 1. Add **Selected Collection Item** (`SelWP`). It follows whichever item you click in Rhino and keeps its reading when you deselect. It outputs `ID`, `Title`, `Location`, `Rotation`, `Height` and the exact `Plane`.
-2. Wire its `Plane` and `Height` into Place Collection Item's `Plane` and `Height`, and its `ID` into `ID`. A gumball edit then survives re-solving.
+2. Wire its `Plane` and `Height` into Place Collection Item's `Plane` and `Height`, and its `ID` into `ID`. A gimbal edit then survives re-solving.
 3. To change an item by number instead, give Place Collection Item new `Location`, `Rotation` or `Height` values and set `Place` to `true`.
 4. To remove it, wire its `ID` into Place Collection Item and set `Remove` to `true`.
 
-Do not put a Move between SelWP and the placer when you also use the gumball, because the offset is applied again on each update.
+Do not put a Move between SelWP and the placer when you also use the gimbal, because the offset is applied again on each update.
 
 ---
 
@@ -141,7 +141,7 @@ Do not put a Move between SelWP and the placer when you also use the gumball, be
       * `SelectMuseumItem.cs` — Pick a collection item by name from a filterable list
       * `PlaceCollectionItem.cs` — Places, moves or removes one collection item in the scene
       * `PlaceCollectionItems.cs` — Places every collection item in a row
-      * `SelectedCollectionItem.cs` — Reads the item selected in Rhino and follows gumball edits
+      * `SelectedCollectionItem.cs` — Reads the item selected in Rhino and follows gimbal edits
       * `BindGeometryData.cs` — Helper node to link geometry to data by ID
 
 ---
