@@ -11,9 +11,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>1.0.0</Version>
+    <Version>0.2.1</Version>
     <Title>Grasshopper-Plugin</Title>
-    <Description>Streams structured metadata from a headless WordPress (ACF Pro) REST API into Rhino/Grasshopper 3D scenes.</Description>
+    <Description>Streams structured metadata from a headless WordPress (ACF Pro) REST API into Rhino/Grasshopper 3D scenes, and places the museum collection in the Rhino scene as textured, labelled planes.</Description>
   </PropertyGroup>
 
   <ItemGroup>

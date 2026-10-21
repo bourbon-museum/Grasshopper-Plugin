@@ -40,7 +40,7 @@ namespace GrasshopperPlugin.Components
             pManager.AddBooleanParameter("Place", "P", "Set to true to place the item in the Rhino document.", GH_ParamAccess.item, false);
             pManager.AddBooleanParameter("Remove", "X", "Set to true to take the item out of the Rhino document instead of placing it.", GH_ParamAccess.item, false);
 
-            pManager.AddPlaneParameter("Plane", "Pl", "Optional. Places the item on this plane instead of using Location and Rotation: the origin is the middle of the bottom edge, X runs along the width and Y points up. Use the Plane output of Selected Collection Item to keep a gumball edit.", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "Pl", "Optional. Places the item on this plane instead of using Location and Rotation: the origin is the middle of the bottom edge, X runs along the width and Y points up. Use the Plane output of Selected Collection Item to keep a gimbal edit.", GH_ParamAccess.item);
 
             pManager[6].Optional = true;
             pManager[7].Optional = true;

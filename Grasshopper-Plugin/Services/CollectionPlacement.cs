@@ -55,7 +55,7 @@ namespace GrasshopperPlugin.Services
         }
 
         /// <summary>
-        /// Adds the plane and its label to the document as a group, so a Rhino gumball moves
+        /// Adds the plane and its label to the document as a group, so a Rhino gimbal moves
         /// them together. Any earlier placement of the same item is replaced, so placing an item
         /// again moves it instead of duplicating it. If the item is already there with the same
         /// shape, nothing is touched, which keeps a selected item selected.

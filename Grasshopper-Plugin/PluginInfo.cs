@@ -15,7 +15,7 @@ namespace GrasshopperPlugin
         public override Bitmap Icon => null!;
 
         public override string Description =>
-            "Streams structured metadata from a headless WordPress (ACF Pro) REST API into Rhino/Grasshopper 3D scenes.";
+            "Streams structured metadata from a headless WordPress (ACF Pro) REST API into Rhino/Grasshopper 3D scenes, and places the museum collection in the Rhino scene as textured, labelled planes.";
 
         public override Guid Id => new("1D15C9ED-8AB0-4EA0-B411-4B6B16D9F4D6");
 

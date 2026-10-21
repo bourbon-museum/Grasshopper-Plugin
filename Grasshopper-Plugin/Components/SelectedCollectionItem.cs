@@ -11,7 +11,7 @@ namespace GrasshopperPlugin.Components
 {
     /// <summary>
     /// Reads the collection item you click on in Rhino, for editing it. Move, rotate or scale
-    /// the item with Rhino's gumball and the outputs follow it; wire them into Place Collection
+    /// the item with Rhino's gimbal and the outputs follow it; wire them into Place Collection
     /// Item (the Plane output keeps the exact pose) or use the ID with Remove.
     /// The reading is kept when the selection is cleared, so editing the item does not lose it.
     /// </summary>
@@ -24,7 +24,7 @@ namespace GrasshopperPlugin.Components
 
         public SelectedCollectionItem()
             : base("Selected Collection Item", "SelWP",
-                   "Reads the collection item selected in Rhino and follows it as you move it with the gumball.",
+                   "Reads the collection item selected in Rhino and follows it as you move it with the gimbal.",
                    "Museum", "Collection")
         {
         }
@@ -73,7 +73,7 @@ namespace GrasshopperPlugin.Components
         }
 
         /// <summary>
-        /// Follows the picked item when it is transformed (e.g. with the gumball). The replaced
+        /// Follows the picked item when it is transformed (e.g. with the gimbal). The replaced
         /// plane carries the new pose, so it is read directly from the event.
         /// </summary>
         private void OnReplaceRhinoObject(object? sender, RhinoReplaceObjectEventArgs e)

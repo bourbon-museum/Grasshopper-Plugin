@@ -59,8 +59,8 @@ The system operates across four primary operational layers, ensuring low-latency
 
 ### 2. Integration & Processing Layer (C# Grasshopper Plugin)
 * **Asynchronous Data Ingestion:** Built using .NET (`HttpClient`), the custom C# components query API endpoints asynchronously without freezing the Rhino UI thread.
-* **Payload Parsing & Mapping:** JSON response payloads are parsed using `Newtonsoft.Json` into strong-typed C# objects, which are then output as native Grasshopper data structures (Data Trees, Lists, and Primitive Types).
-* **Caching & Polling Management:** Implements local caching and rate-limiting logic to prevent API throttling and allow offline/offline-fallback scene generation.
+* **Payload Parsing & Mapping:** JSON response payloads are parsed using `Newtonsoft.Json` into strong-typed C# objects, which are then output as native Grasshopper lists and primitive types (IDs, titles, numbers, JSON) or placed straight into the Rhino scene.
+* **Fetch on Demand:** Components only contact the site when you ask them to (a `Fetch`, `Place` or `Refresh` input set to `true`), and the collection picker keeps its list until you refresh it. Downloaded item images are cached in the system temp folder so they are fetched once.
 
 ### 3. Parametric Geometry Layer (Grasshopper + RhinoCommon)
 * **Attribute-Driven Geometry:** Ingested metadata feeds directly into Grasshopper definitions to dictate parametric transforms (scale, array counts, extrusion heights, colors, or structural profiles).
@@ -71,9 +71,9 @@ The system operates across four primary operational layers, ensuring low-latency
 ## 🔑 Key Functional Capabilities
 
 * **Decoupled Workflow:** Design teams manage parametric logic inside Rhino/Grasshopper while non-technical stakeholders (project managers, interior designers, clients) manipulate spatial variables via the familiar WordPress dashboard.
-* **Real-time & Batch Synchronization:** Supports both manual refresh triggers and automated polling to sync live site updates directly into active CAD sessions.
-* **Robust Error Handling:** Features built-in status indicators, API response logging, and null-check defaults within the custom component UI to ensure Grasshopper definitions do not fail if internet connectivity drops or field data is missing.
-* **Scalable Data Tree Mapping:** Structured JSON arrays automatically map into multidimensional Grasshopper Data Trees, preserving complex relationships (e.g., Parent Building → Floor Level → Room Metadata).
+* **On-demand Synchronization:** Manual `Fetch`, `Place` and `Refresh` triggers pull live site content into the active CAD session, one item at a time or the whole collection. There is no automatic polling.
+* **Error Reporting:** Components show failed requests, empty URLs and missing images as standard Grasshopper warnings and errors on the node, so a dropped connection or missing featured image does not crash the definition.
+* **Scene Placement and Editing:** Collection items become textured, labelled planes in Rhino that can be moved with the gimbal, edited from Grasshopper, or removed again.
 
 ---
 
@@ -118,11 +118,30 @@ Do not put a Move between SelWP and the placer when you also use the gimbal, bec
 
 ---
 
+## 📥 Install
+
+Download the latest build from the [Releases page](https://github.com/bourbon-museum/Grasshopper-Plugin/releases/latest), unzip it, and copy the `.gha` into your Grasshopper Libraries folder with Rhino closed:
+
+| Platform | Libraries folder |
+|----------|------------------|
+| Windows | `%APPDATA%\Grasshopper\Libraries\` |
+| Mac | `~/Library/Application Support/McNeel/Rhinoceros/8.0/Plug-ins/Grasshopper (b45a29b1-4343-4035-989e-044e8580d9cf)/Libraries/` |
+
+On Windows, unblock the file first if it is flagged (right-click the `.gha` → Properties → Unblock). Relaunch Rhino, open Grasshopper, and look for the **Museum** tab, which has a **Collection** panel and a **Data** panel.
+
+* **Rhino 7** needs `Grasshopper-Plugin-net48.zip` (it only loads .NET Framework plugins).
+* **Rhino 8** can use either `net7.0` or `net48`.
+
+To build from source: `dotnet build Grasshopper-Plugin.sln -c Release`. Both targets (`net7.0` and `net48`) build into `Grasshopper-Plugin/bin/Release/`.
+
+---
+
 ## 📄 File Structure
 
 * **`Grasshopper-Plugin/`**
   * `.gitignore` — Visual Studio / .NET gitignore template
   * `README.md` — Project overview and architectural design
+  * `docs/` — Screenshots used in the README
   * `Grasshopper-Plugin.sln` — Solution file
   * **`Grasshopper-Plugin/`** (Main C# Project)
     * `Grasshopper-Plugin.csproj` — .NET project dependencies & build targets
